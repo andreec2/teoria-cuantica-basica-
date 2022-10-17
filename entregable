@@ -1,0 +1,104 @@
+import math
+
+def norma_vector(vector):
+    suma = 0
+    for i in range(len(vector)):
+        suma = suma + (vector[i]*vector[i])
+    suma = math.sqrt(suma)
+
+    return suma
+
+def probabilidad_transito(vector_1, vector_2):
+
+    norma = norma_vector(vector_1)
+    respuesta = []
+    for i in range(len(vector_2)):
+        transito = ((1/norma)*vector_2[i])
+        respuesta.append(transito)
+
+    return respuesta
+def amplitud_de_trancicion(up, down):
+    suma = 0
+    suma1 = 0
+    suma2 = 0
+    for i in range(len(up)):
+        suma1 = suma1 + (up[i]*up[i])
+        suma2 = suma2 + (down[i] * down[i])
+    suma = suma + (suma2 + suma1)
+    suma = math.sqrt(suma)
+    r1 = suma1/((suma*suma)//1)
+    r2 = suma2/((suma*suma)//1)
+    return r1, r2
+
+
+def producto_matrices(a, b):
+    filas_a = len(a)
+    filas_b = len(b)
+    columnas_a = len(a)
+    columnas_b = len(b)
+    if columnas_a != filas_b:
+        return None
+    producto = []
+    for i in range(filas_b):
+        producto.append([])
+        for j in range(columnas_b):
+            producto[i].append(None)
+    for c in range(columnas_b):
+        for i in range(filas_a):
+            suma = 0
+            for j in range(columnas_a):
+                suma += a[i][j]*b[j][c]
+            producto[i][c] = suma
+    return producto
+
+def var(matriz, observable):
+
+    delta = []
+    for i in range(len(matriz)):
+        for j in range(len(matriz[0])):
+            delta = delta + [matriz[i][j]-observable[i][j]]
+
+    deltay = producto_matrices(delta,delta)
+
+    return deltay
+
+
+
+
+
+def main():
+
+    #1. El sistema debe calcular la probabilidad de encontrarlo en una posición en particular.
+    vector = [3, 1, -2, 1, 2]
+    ket = [3-1, -2, 1, 2]
+    norma = norma_vector(vector)
+    probabilidad = ((ket[2]**2)/norma**2)
+    print(norma)
+    print(probabilidad)
+
+    #2. El sistema si se le da otro vector Ket debe buscar la probabilidad de transitar del primer vector al segundo
+    vector_1 = [2,3,1,2]
+    vector_2 = [2-3j, 1+2j]
+    transio = probabilidad_transito(vector_1,vector_2)
+    print(transio)
+
+    #1. Amplitud de transición. El sistema puede recibir dos vectores
+    #y calcular la probabilidad de transitar de el uno al otro después de hacer la observación
+
+    up = [3,-4]
+    down = [7, 2]
+    rup, rdown = amplitud_de_trancicion(up, down)
+    print(rup, rdown)
+
+    #2. Ahora con una matriz que describa un observable y un vector ket, el sistema revisa que la matriz sea hermitiana,
+    # y si lo es, calcula la media y la varianza del observable en el estado dado.
+
+    #matriz = [[(5, 0),(3, 7)],[(3,-7),(2,0)]]
+    #matriz = [[5+0j, 3+7j], [3-7j, 2+0j]]
+    matriz = [[1, -1], [1, 2]]
+    observable = [[2.5, 0],[0, 2.5]]
+
+    #deltay = var(matriz, observable)
+    #print(deltay)
+
+main()
